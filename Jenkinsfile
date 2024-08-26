@@ -17,18 +17,17 @@ kind: Pod
 spec:
   containers:
   - name: shell
-    image: docker:24.0.1
-    command:
-    - cat
+    image: docker:1.11
+    command: ['cat']
     tty: true
-  - name: dind
-    image: docker:20-dind
-    securityContext:
-      privileged: true
+    volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock
   volumes:
-  - name: docker-graph-storage
-    emptyDir: {}
-  """
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
+"""
         }
     }
     environment {
