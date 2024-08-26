@@ -17,7 +17,7 @@ kind: Pod
 spec:
   containers:
   - name: shell
-    image: docker:1.11
+    image: docker:27.1.2
     command: ['cat']
     tty: true
     volumeMounts:
