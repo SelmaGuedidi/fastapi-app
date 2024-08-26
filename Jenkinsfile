@@ -1,3 +1,4 @@
+@Library('my-shared-library') _
 properties([
     pipelineTriggers([
         githubPush()
@@ -40,12 +41,7 @@ spec:
         stage('Build Docker Image') {
             steps {
                 container('shell') {
-                    script {
-                        sh 'docker info'
-                        sh '''
-                        docker build -t $DOCKER_IMAGE .
-                        '''
-                    }
+                    buildDockerImage(DOCKER_IMAGE)
                 }
             }
         }
@@ -53,13 +49,7 @@ spec:
         stage('Tag and Push Docker Image') {
             steps {
                 container('shell') {
-                    script {
-                        sh '''
-                        echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                        docker tag $DOCKER_IMAGE $DOCKERHUB_REPO:latest
-                        docker push $DOCKERHUB_REPO:latest
-                        '''
-                    }
+                    pushDockerImage(DOCKER_IMAGE, DOCKERHUB_REPO)
                 }
             }
         }
@@ -67,21 +57,7 @@ spec:
         stage('Deploy to Minikube') {
             steps {
                 container('shell') {
-                    sh '''
-                    kubectl apply -f k8s/deployment.yaml
-                    kubectl apply -f k8s/service.yaml
-                    '''
-                }
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                container('shell') {
-                    sh '''
-                    kubectl rollout status deployment/fastapi-app-deployment
-                    kubectl get pods
-                    '''
+                    deployToKubernetes('k8s/deployment.yaml', 'k8s/service.yaml')
                 }
             }
         }
