@@ -22,7 +22,7 @@ spec:
     - cat
     tty: true
   - name: dind
-    image: docker:24.0.1-dind
+    image: docker:20-dind
     securityContext:
       privileged: true
   volumes:
