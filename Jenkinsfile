@@ -16,6 +16,15 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+  - name: kubectl
+    image: bitnami/kubectl:latest
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "sleep 99d"
+    tty: true
+    securityContext:
+      runAsUser: 0
   - name: shell
     image: docker:27.1.2
     command: ['cat']
@@ -62,7 +71,7 @@ spec:
 
         stage('Deploy to Minikube') {
             steps {
-                container('shell') {
+                container('kubectl') {
                     deployToKubernetes('k8s/deployment.yaml', 'k8s/service.yaml')
                 }
             }
