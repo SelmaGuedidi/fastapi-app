@@ -25,7 +25,7 @@ spec:
     tty: true
     securityContext:
       runAsUser: 0
-  - name: shell
+  - name: dind
     image: docker:27.1.2
     command: ['cat']
     tty: true
@@ -53,17 +53,17 @@ spec:
         DOCKERHUB_REPO = "selmaguedidi/fastapi-app"
     }
     stages {
-        stage('Build Docker Image') {
+       stage('Build Docker Image') {
             steps {
-                container('shell') {
+                container('dind') {
                     buildDockerImage(DOCKER_IMAGE)
                 }
             }
         }
-
+ 
         stage('Tag and Push Docker Image') {
             steps {
-                container('shell') {
+                container('dind') {
                     pushDockerImage(DOCKER_IMAGE, DOCKERHUB_REPO)
                 }
             }
