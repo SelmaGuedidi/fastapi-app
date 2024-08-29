@@ -72,7 +72,7 @@ spec:
         stage('Deploy to Minikube') {
             steps {
                 container('kubectl') {
-                    deployToKubernetes('k8s/deployment.yaml', 'k8s/service.yaml', fastapi-app-service, '80' , '8000')
+                    deployToKubernetes('k8s/deployment.yaml', 'k8s/service.yaml', 'fastapi-app-service', '80' , '8000')
                 }
             }
         }
