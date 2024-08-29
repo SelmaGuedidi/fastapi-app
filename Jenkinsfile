@@ -16,14 +16,15 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: kubectl
+  - name: custom-agent
     image: bitnami/kubectl:latest
     command:
       - "/bin/sh"
       - "-c"
       - |
         apk add --no-cache python3 py3-pip && \
-        pip3 install pytest
+        pip3 install pytest && \
+        sleep 99d
   - name: dind
     image: docker:27.1.2
     command: ['cat']
@@ -54,7 +55,7 @@ spec:
     stages {
         stage('Run unit tests') {
             steps {
-                container('kubectl') {
+                container('custom-agent') {
                     sh 'pytest'
                 }
             }
@@ -77,7 +78,7 @@ spec:
 
         stage('Deploy to Minikube') {
             steps {
-                container('kubectl') {
+                container('custom-agent') {
                     deployToKubernetes('k8s/deployment.yaml', 'k8s/service.yaml', 'fastapi-app-service', '80' , '8000')
                 }
             }
