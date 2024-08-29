@@ -14,4 +14,8 @@ RUN python3 -m venv /venv && \
 # Set environment variables for the virtual environment
 ENV PATH="/venv/bin:${PATH}"
 
+# Set permissions for the Jenkins workspace directory
+RUN mkdir -p /home/jenkins/agent/workspace && \
+    chown -R 1001:1001 /home/jenkins/agent/workspace
+
 USER 1001
