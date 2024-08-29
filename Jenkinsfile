@@ -9,7 +9,7 @@ pipeline {
     agent {
         kubernetes {
             cloud "minikube"
-            yamlFile "pod-template.yaml"
+            yamlFile "agents/pod-template.yaml"
         }
     }
     environment {

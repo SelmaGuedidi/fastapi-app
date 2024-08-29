@@ -3,14 +3,11 @@ kind: Pod
 spec:
   containers:
   - name: custom-agent
-    image: bitnami/kubectl:latest
+    image: selmaguedidi/custom-agent:latest
     command:
       - "/bin/sh"
       - "-c"
       - |
-        apt-get update && \
-        apt-get install -y python3 python3-pip && \
-        pip3 install pytest && \
         sleep 99d
   - name: dind
     image: docker:27.1.2
