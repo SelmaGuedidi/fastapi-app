@@ -21,10 +21,9 @@ spec:
     command:
       - "/bin/sh"
       - "-c"
-      - "sleep 99d"
-    tty: true
-    securityContext:
-      runAsUser: 0
+      - |
+        apk add --no-cache python3 py3-pip && \
+        pip3 install pytest
   - name: dind
     image: docker:27.1.2
     command: ['cat']
@@ -53,6 +52,13 @@ spec:
         DOCKERHUB_REPO = "selmaguedidi/fastapi-app"
     }
     stages {
+        stage('Run unit tests') {
+            steps {
+                container('kubectl') {
+                    sh 'pytest'
+                }
+            }
+        }
        stage('Build Docker Image') {
             steps {
                 container('dind') {

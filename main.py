@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends
-from typing import Annotated, List
+from typing import List
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from database import SessionLocal, engine
@@ -9,8 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    'http://localhost:3000',
-    'http://host.docker.internal:3000'
+    'http://localhost:3000'
 ]
 
 app.add_middleware(
@@ -19,7 +18,6 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*']
-
 )
 
 class TransactionBase(BaseModel):
@@ -33,7 +31,7 @@ class TransactionModel(TransactionBase):
     id: int
 
     class Config:
-        orm_mode =True
+        orm_mode = True
 
 def get_db():
     db = SessionLocal()
@@ -42,12 +40,10 @@ def get_db():
     finally:
         db.close()
 
-db_dependency = Annotated[Session, Depends(get_db)]
-
 models.Base.metadata.create_all(bind=engine)
 
 @app.post("/transactions/", response_model=TransactionModel)
-async def create_transaction(transaction: TransactionBase,db: db_dependency):
+async def create_transaction(transaction: TransactionBase, db: Session = Depends(get_db)):
     db_transaction = models.Transaction(**transaction.dict())
     db.add(db_transaction)
     db.commit()
@@ -55,6 +51,6 @@ async def create_transaction(transaction: TransactionBase,db: db_dependency):
     return db_transaction
 
 @app.get("/transactions/", response_model=List[TransactionModel])
-async def read_transactions(db : db_dependency, skip: int = 0, limit: int = 100):
+async def read_transactions(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
     transactions = db.query(models.Transaction).offset(skip).limit(limit).all()
     return transactions
