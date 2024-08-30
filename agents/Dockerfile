@@ -9,7 +9,7 @@ RUN apt-get update && \
 # Create a virtual environment and install packages
 RUN python3 -m venv /venv && \
     /venv/bin/pip install --upgrade pip && \
-    /venv/bin/pip install pytest
+    /venv/bin/pip install pytest fastapi httpx SQLAlchemy pydantic
 
 # Set environment variables for the virtual environment
 ENV PATH="/venv/bin:${PATH}"
@@ -18,4 +18,3 @@ ENV PATH="/venv/bin:${PATH}"
 RUN mkdir -p /home/jenkins/agent/workspace && \
     chown -R 1001:1001 /home/jenkins/agent/workspace
 
-USER 1001
