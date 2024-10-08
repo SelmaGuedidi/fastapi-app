@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from database import SessionLocal, engine
 import models
 from fastapi.middleware.cors import CORSMiddleware
-
+from prometheus_fastapi_instrumentator import Instrumentator
 app = FastAPI()
 
 origins = [
@@ -43,6 +43,13 @@ def get_db():
         db.close()
 
 models.Base.metadata.create_all(bind=engine)
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
+# Instrumentation for Prometheus metrics
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 @app.post("/transactions/", response_model=TransactionModel)
 async def create_transaction(transaction: TransactionBase, db: Session = Depends(get_db)):

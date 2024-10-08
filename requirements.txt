@@ -4,3 +4,4 @@ SQLAlchemy==2.0.29
 uvicorn
 pytest
 httpx
+prometheus-fastapi-instrumentator
