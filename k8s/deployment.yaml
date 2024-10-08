@@ -1,9 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fastapi-app-deployment
   labels:
     app: fastapi-app
+    app.kubernetes.io/instance: fastapi-app
+  name: fastapi-app-deployment
+  namespace: default
 spec:
   replicas: 2
   selector:
