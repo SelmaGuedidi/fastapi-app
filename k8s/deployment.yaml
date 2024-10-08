@@ -17,23 +17,29 @@ spec:
         app: fastapi-app
     spec:
       containers:
-      - name: fastapi-app
-        image: selmaguedidi/fastapi-app:latest
-        ports:
-        - containerPort: 8000
-        env:
-        - name: ENVIRONMENT
-          value: "production"
-        command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 30
-          periodSeconds: 10
+        - command:
+            - uvicorn
+            - 'main:app'
+            - '--host'
+            - 0.0.0.0
+            - '--port'
+            - '8000'
+          env:
+            - name: ENVIRONMENT
+              value: production
+          image: 'selmaguedidi/fastapi-app:latest'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          name: fastapi-app
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
