@@ -37,9 +37,4 @@ spec:
           name: fastapi-app
           ports:
             - containerPort: 8000
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8000
-            initialDelaySeconds: 30
-            periodSeconds: 10
+
