@@ -6,6 +6,27 @@ on:
       - main
 
 jobs:
+  sonarqube:
+    name: SonarQube Integration
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/python@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   test:
     runs-on: ubuntu-latest
 
