@@ -1,7 +1,7 @@
-fastapi==0.112.2
-pydantic==2.8.2
-SQLAlchemy==2.0.29
 starlette==0.40.0 
+fastapi
+pydantic
+SQLAlchemy
 uvicorn
 pytest
 httpx
